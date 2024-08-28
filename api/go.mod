@@ -1,12 +1,12 @@
-module api/rest
+module main
 
 go 1.22.6
 
-replace api/album => ../album
+replace api/album => ./album
 
-replace api/client => ../client
+replace api/client => ./client
 
-replace api/transaction => ../transaction
+replace api/transaction => ./transaction
 
 require github.com/gin-gonic/gin v1.10.0
 

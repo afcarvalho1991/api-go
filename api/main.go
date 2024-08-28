@@ -1,15 +1,17 @@
-package apirest
+package main
 
 import (
 	"api/album"
 	"api/client"
 	"api/transaction"
 
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-
+	fmt.Println("REST API - live")
 	router := gin.Default()
 	router.GET("/album", album.GetAlbums)
 	router.POST("/album", album.PostAlbums)
@@ -21,5 +23,5 @@ func main() {
 	router.GET("/transaction/:id", transaction.GetTransactionByID)
 	router.POST("/transaction", transaction.PostTransaction)
 
-	router.Run("localhost:8080")
+	router.Run(":8080")
 }
