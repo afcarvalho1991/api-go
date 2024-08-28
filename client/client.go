@@ -1,4 +1,4 @@
-package main
+package client
 
 import (
 	"net/http"
@@ -18,7 +18,7 @@ type client struct {
 var clients map[uuid.UUID]client = make(map[uuid.UUID]client)
 
 // postClient adds a client from JSON received in the request body.
-func postClient(c *gin.Context) {
+func PostClient(c *gin.Context) {
 	var new_client client
 
 	// Call BindJSON to bind the received JSON to
@@ -37,7 +37,7 @@ func postClient(c *gin.Context) {
 
 // getAlbumByID locates the album whose ID value matches the id
 // parameter sent by the client, then returns that album as a response.
-func getClientByID(c *gin.Context) {
+func GetClientByID(c *gin.Context) {
 	id := c.Param("id")
 
 	// Loop through the list of albums, looking for

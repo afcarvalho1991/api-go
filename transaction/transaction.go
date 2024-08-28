@@ -1,6 +1,8 @@
-package main
+package transaction
 
 import (
+	"api/album"
+
 	"net/http"
 	"time"
 
@@ -21,7 +23,7 @@ type transaction struct {
 var transactions map[uuid.UUID]transaction = make(map[uuid.UUID]transaction)
 
 // postClient adds a client from JSON received in the request body.
-func postTransaction(c *gin.Context) {
+func PostTransaction(c *gin.Context) {
 	var new_tx transaction
 
 	// Call BindJSON to bind the received JSON to
@@ -31,7 +33,7 @@ func postTransaction(c *gin.Context) {
 	}
 
 	// Check if album exist
-	_, hasAlbum := albums[uuid.FromStringOrNil(new_tx.Album)]
+	_, hasAlbum := album.GetAlbumByID(new_tx.Album)
 	if !hasAlbum {
 		c.IndentedJSON(http.StatusNotFound, "Album "+new_tx.Album+" not found")
 		return
@@ -55,7 +57,7 @@ func postTransaction(c *gin.Context) {
 
 // getAlbumByID locates the album whose ID value matches the id
 // parameter sent by the client, then returns that album as a response.
-func getTransactionByID(c *gin.Context) {
+func GetTransactionByID(c *gin.Context) {
 	id := c.Param("id")
 
 	// Loop through the list of albums, looking for
