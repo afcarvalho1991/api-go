@@ -2,6 +2,10 @@ package transaction
 
 import (
 	"api/album"
+	"api/client"
+	"encoding/json"
+	"fmt"
+	"io"
 
 	"net/http"
 	"time"
@@ -11,7 +15,7 @@ import (
 )
 
 // Transaction represents data about a Transaction.
-type transaction struct {
+type Transaction struct {
 	ID        uuid.UUID `json:"id"`
 	Client    string    `json:"client"`
 	Album     string    `json:"album"`
@@ -20,11 +24,11 @@ type transaction struct {
 }
 
 // albums slice to seed record album data.
-var transactions map[uuid.UUID]transaction = make(map[uuid.UUID]transaction)
+var transactions map[uuid.UUID]Transaction = make(map[uuid.UUID]Transaction)
 
 // postClient adds a client from JSON received in the request body.
 func PostTransaction(c *gin.Context) {
-	var new_tx transaction
+	var new_tx Transaction
 
 	// Call BindJSON to bind the received JSON to
 	// newAlbum.
@@ -33,26 +37,51 @@ func PostTransaction(c *gin.Context) {
 	}
 
 	// Check if album exist
-	_, hasAlbum := album.GetAlbumByID(new_tx.Album)
-	if !hasAlbum {
+	response, err := http.Get(fmt.Sprintf("http://localhost:8080/album/" + new_tx.Album))
+
+	if err != nil {
+		fmt.Print(err.Error())
+		return
+	}
+
+	var album album.Album
+	responseData, err := io.ReadAll(response.Body)
+	if err != nil {
+		fmt.Print(err.Error())
+		return
+	}
+	json.Unmarshal(responseData, &album)
+
+	if album.ID == uuid.Nil {
 		c.IndentedJSON(http.StatusNotFound, "Album "+new_tx.Album+" not found")
 		return
 	}
 
-	// Check if client exist
-	_, hasClient := clients[uuid.FromStringOrNil(new_tx.Client)]
-	if !hasClient {
+	// Check if Client exist
+
+	response, err = http.Get(fmt.Sprintf("http://localhost:8080/client/" + new_tx.Client))
+
+	if err != nil {
+		fmt.Print(err.Error())
+		return
+	}
+
+	var client client.Client
+	responseData, err = io.ReadAll(response.Body)
+	if err != nil {
+		fmt.Print(err.Error())
+		return
+	}
+	json.Unmarshal(responseData, &client)
+
+	if client.ID == uuid.Nil {
 		c.IndentedJSON(http.StatusNotFound, "Client "+new_tx.Client+" not found")
 		return
 	}
 
-	// Add ID
-	new_tx.ID = uuid.NewV4()
-	new_tx.Timestamp = time.Now()
+	id := createTransaction(new_tx)
 
-	// Add a new client to the slice.
-	transactions[new_tx.ID] = new_tx
-	c.IndentedJSON(http.StatusCreated, new_tx.ID)
+	c.IndentedJSON(http.StatusCreated, id)
 }
 
 // getAlbumByID locates the album whose ID value matches the id
@@ -73,4 +102,16 @@ func GetTransactionByID(c *gin.Context) {
 	c.IndentedJSON(
 		http.StatusNotFound,
 		gin.H{"message": "transaction with id=" + id + " not found"})
+}
+
+func createTransaction(tx Transaction) uuid.UUID {
+
+	// Add ID & timestamp
+	tx.ID = uuid.NewV4()
+	tx.Timestamp = time.Now()
+
+	// Add a new transaction to the slice.
+	transactions[tx.ID] = tx
+
+	return tx.ID
 }

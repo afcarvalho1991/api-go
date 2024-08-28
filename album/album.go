@@ -8,7 +8,7 @@ import (
 )
 
 // album represents data about a record album.
-type album struct {
+type Album struct {
 	ID     uuid.UUID `json:"id"`
 	Title  string    `json:"title"`
 	Artist string    `json:"artist"`
@@ -16,7 +16,7 @@ type album struct {
 }
 
 // albums slice to seed record album data.
-var albums map[uuid.UUID]album = make(map[uuid.UUID]album)
+var albums map[uuid.UUID]Album = make(map[uuid.UUID]Album)
 
 // getAlbums responds with the list of all albums as JSON.
 func GetAlbums(c *gin.Context) {
@@ -25,7 +25,7 @@ func GetAlbums(c *gin.Context) {
 
 // postAlbums adds an album from JSON received in the request body.
 func PostAlbums(c *gin.Context) {
-	var newAlbum album
+	var newAlbum Album
 
 	// Call BindJSON to bind the received JSON to
 	// newAlbum.
@@ -56,14 +56,14 @@ func GetAlbumByID(c *gin.Context) {
 
 // DB interaction
 
-func getAlbumByID(id string) (album, bool) {
+func getAlbumByID(id string) (Album, bool) {
 	// Loop through the list of albums, looking for
 	// an album whose ID value matches the parameter.
 	album, contains := albums[uuid.FromStringOrNil(id)]
 	return album, contains
 }
 
-func addAlbum(newAlbum album) album {
+func addAlbum(newAlbum Album) Album {
 
 	// Add ID
 	newAlbum.ID = uuid.NewV4()
@@ -74,6 +74,6 @@ func addAlbum(newAlbum album) album {
 	return newAlbum
 }
 
-func getAllAlbums() map[uuid.UUID]album {
+func getAllAlbums() map[uuid.UUID]Album {
 	return albums
 }

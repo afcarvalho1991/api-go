@@ -8,18 +8,18 @@ import (
 )
 
 // Client represents data about a Client.
-type client struct {
+type Client struct {
 	ID   uuid.UUID `json:"id"`
 	Name string    `json:"name"`
 	Age  int8      `json:"age"`
 }
 
 // clients db
-var clients map[uuid.UUID]client = make(map[uuid.UUID]client)
+var clients map[uuid.UUID]Client = make(map[uuid.UUID]Client)
 
 // postClient adds a client from JSON received in the request body.
 func PostClient(c *gin.Context) {
-	var newClient client
+	var newClient Client
 
 	// Call BindJSON to bind the received JSON to
 	// newAlbum.
@@ -52,14 +52,14 @@ func GetClientByID(c *gin.Context) {
 
 // Comm with DB
 
-func getClientByID(id string) (client, bool) {
+func getClientByID(id string) (Client, bool) {
 	// Loop through the list of albums, looking for
 	// an album whose ID value matches the parameter.
 	client, contains := clients[uuid.FromStringOrNil(id)]
 	return client, contains
 }
 
-func addClient(newClient client) client {
+func addClient(newClient Client) Client {
 
 	// Add ID
 	newClient.ID = uuid.NewV4()
