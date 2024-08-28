@@ -54,6 +54,8 @@ func GetAlbumByID(c *gin.Context) {
 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
 }
 
+// DB interaction
+
 func getAlbumByID(id string) (album, bool) {
 	// Loop through the list of albums, looking for
 	// an album whose ID value matches the parameter.

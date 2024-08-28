@@ -19,20 +19,17 @@ var clients map[uuid.UUID]client = make(map[uuid.UUID]client)
 
 // postClient adds a client from JSON received in the request body.
 func PostClient(c *gin.Context) {
-	var new_client client
+	var newClient client
 
 	// Call BindJSON to bind the received JSON to
 	// newAlbum.
-	if err := c.BindJSON(&new_client); err != nil {
+	if err := c.BindJSON(&newClient); err != nil {
 		return
 	}
 
-	// Add ID
-	new_client.ID = uuid.NewV4()
+	newClient = addClient(newClient)
 
-	// Add a new client to the slice.
-	clients[new_client.ID] = new_client
-	c.IndentedJSON(http.StatusCreated, new_client.ID)
+	c.IndentedJSON(http.StatusCreated, newClient.ID)
 }
 
 // getAlbumByID locates the album whose ID value matches the id
@@ -40,9 +37,10 @@ func PostClient(c *gin.Context) {
 func GetClientByID(c *gin.Context) {
 	id := c.Param("id")
 
-	// Loop through the list of albums, looking for
+	// Loop through the list of Clients, looking for
 	// an album whose ID value matches the parameter.
-	client, contains := clients[uuid.FromStringOrNil(id)]
+	client, contains := getClientByID(id)
+
 	if contains {
 		c.IndentedJSON(http.StatusOK, client)
 		return
@@ -50,4 +48,24 @@ func GetClientByID(c *gin.Context) {
 	c.IndentedJSON(
 		http.StatusNotFound,
 		gin.H{"message": "client with id=" + id + " not found"})
+}
+
+// Comm with DB
+
+func getClientByID(id string) (client, bool) {
+	// Loop through the list of albums, looking for
+	// an album whose ID value matches the parameter.
+	client, contains := clients[uuid.FromStringOrNil(id)]
+	return client, contains
+}
+
+func addClient(newClient client) client {
+
+	// Add ID
+	newClient.ID = uuid.NewV4()
+
+	// Add the new Client to the slice.
+	clients[newClient.ID] = newClient
+
+	return newClient
 }
