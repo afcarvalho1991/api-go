@@ -1,4 +1,3 @@
-version: '3.9'
 
 services:
   postgres-db:
@@ -24,6 +23,7 @@ services:
       - POSTGRES_PASSWORD=XPTO123
       - POSTGRES_USER=XPTO
       - POSTGRES_DB=store
+      - GIN_MODE=release
 
 volumes:
   postgres-db-vol:
