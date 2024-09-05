@@ -2,6 +2,8 @@ module api/client
 
 go 1.22.6
 
+replace api/cpg => ../cpg
+
 require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/satori/go.uuid v1.2.0

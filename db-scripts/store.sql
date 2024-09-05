@@ -1,1 +1,1 @@
-CREATE DATABASE IF NOT EXISTS album_store;
+CREATE DATABASE album_store;

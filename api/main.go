@@ -4,17 +4,17 @@ import (
 	"api/album"
 	"api/client"
 	"api/transaction"
-
 	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+
 	fmt.Println("REST API - live")
 	router := gin.Default()
 	router.GET("/album", album.GetAlbums)
-	router.POST("/album", album.PostAlbums)
+	router.POST("/album", album.PostAlbum)
 	router.GET("/album/:id", album.GetAlbumByID)
 
 	router.POST("/client", client.PostClient)

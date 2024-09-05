@@ -6,9 +6,20 @@ replace api/album => ../album
 
 replace api/client => ../client
 
+replace api/cpg => ../cpg
+
 require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/satori/go.uuid v1.2.0
+)
+
+require (
+	api/cpg v0.0.0-00010101000000-000000000000 // indirect
+	github.com/jackc/pgpassfile v1.0.0 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
+	github.com/jackc/pgx/v5 v5.6.0 // indirect
+	github.com/jackc/puddle/v2 v2.2.1 // indirect
+	golang.org/x/sync v0.1.0 // indirect
 )
 
 require (
