@@ -14,6 +14,7 @@ COPY . .
 RUN cd album && go mod download && go mod tidy
 RUN cd client && go mod download && go mod tidy
 RUN cd transaction && go mod download && go mod tidy
+RUN cd cpg && go mod download && go mod tidy
 RUN go mod download && go mod tidy
 
 
