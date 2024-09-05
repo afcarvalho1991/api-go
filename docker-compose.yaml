@@ -1,17 +1,6 @@
 
 services:
-  postgres-db:
-    image: postgres:latest
-    container_name: postgres-db
-    ports:
-      - 5432:5432
-    volumes:
-      - postgres-db-vol:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_PASSWORD=XPTO123
-      - POSTGRES_USER=XPTO
-      - POSTGRES_DB=store
-
+  
   api:
     container_name: api
     image: api-go:latest
@@ -20,10 +9,33 @@ services:
     ports:
       - 8080:8080
     environment:
-      - POSTGRES_PASSWORD=XPTO123
       - POSTGRES_USER=XPTO
-      - POSTGRES_DB=store
+      - POSTGRES_PASSWORD=XPTO123
+      - POSTGRES_DB=album_store
       - GIN_MODE=release
+
+  postgres-db:
+    image: postgres:latest
+    container_name: postgres-db
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-db-vol:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=XPTO
+      - POSTGRES_PASSWORD=XPTO123
+      - POSTGRES_DB=store
+
+  postgres-db-pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "xpto@xpto.com"
+      PGADMIN_DEFAULT_PASSWORD: "xpto123"
+    ports:
+      - "8081:80"
+    depends_on:
+      - postgres-db
 
 volumes:
   postgres-db-vol:
